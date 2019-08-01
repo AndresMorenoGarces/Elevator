@@ -4,11 +4,23 @@ using UnityEngine;
 
 public class ButtonUp : MonoBehaviour
 {
-    void OnMouseEnter()
+    [SerializeField]
+    ElevatorMove elevatorMove;
+
+    void OnMouseOver()
     {
-        Debug.Log("Open");
-        //Elevator.elevatorInstance.OpenDoor();
-        Elevator.elevatorInstance.ElevatorMove();
-        
+        if (Input.GetKey(KeyCode.Mouse0))
+        {
+            elevatorMove = ElevatorMove.Move;
+        }
+        else
+        {
+            elevatorMove = ElevatorMove.Stop;
+        }
+
+        if (elevatorMove == ElevatorMove.Move)
+        {
+            Elevator.elevatorInstance.ElevatorMove();
+        }
     }
 }

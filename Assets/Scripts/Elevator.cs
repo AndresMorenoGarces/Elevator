@@ -16,41 +16,49 @@ public class Elevator : MonoBehaviour
     {
          distanceElevator_NextFloor = elevatorWayPoints[currentFloor].position - elevatorTransform.position;
 
-         if (distanceElevator_NextFloor.magnitude > 0)
-         {
+        if (distanceElevator_NextFloor.magnitude > 0.1f)
+        {
             elevatorTransform.position += distanceElevator_NextFloor * 1f * Time.deltaTime;
-         }
+            CloseDoor();
+        }
+        else if (distanceElevator_NextFloor.magnitude <= 0.1f)
+        {
+            OpenDoor();
+        }
     }
 
-    public bool CloseDoor()
+    public void CloseDoor()
     {
         if (doorOne.position.z < -1)
         {
             doorOne.position += doorOne.transform.forward * Time.deltaTime;
-
-            return true;
         }
-        return false;
     }
 
-    public bool OpenDoor()
+    public void OpenDoor()
     {
         if (doorOne.position.z >= -1)
         {
             doorOne.position -= doorOne.transform.forward * 0.5f * Time.deltaTime;
-
-            return true;
         }
-        return false;
     }
 
     private void Awake()
     {
         elevatorTransform = transform;
-    }
 
-    private void Update()
-    {
-        ElevatorMove();
+        if (elevatorInstance == null)
+        {
+            elevatorInstance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
+enum ElevatorMove
+{
+    Move,
+    Stop
+};
