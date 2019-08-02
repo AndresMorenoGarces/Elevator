@@ -7,10 +7,11 @@ public class Elevator : MonoBehaviour
     public static Elevator elevatorInstance;
     Transform elevatorTransform;
     public Transform[] elevatorWayPoints;
-    int currentFloor = 0;
+    public int currentFloor;
     public float elevatorSpeed;
     Vector3 distanceElevator_NextFloor;
     public Transform doorOne;
+    
 
     public void ElevatorMove()
     {
