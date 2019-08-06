@@ -26,6 +26,20 @@ public class Elevator : MonoBehaviour
         {
             OpenDoor();
         }
+
+        switch (GameManager.instance.floorNumbers[0])
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+        }
     }
 
     public void CloseDoor()
@@ -47,6 +61,7 @@ public class Elevator : MonoBehaviour
     private void Awake()
     {
         elevatorTransform = transform;
+        currentFloor = GameManager.instance.buttonList.IndexOf(0);
 
         if (elevatorInstance == null)
         {

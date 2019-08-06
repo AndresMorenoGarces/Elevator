@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    public static GameManager instance; 
+    public static GameManager instance;
 
+    public List<int> buttonList;
+    public int[] floorNumbers = new int[7];
 
-    
     void Awake()
     {
         if(instance == null)
@@ -22,11 +23,8 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        
+        buttonList = new List<int>(floorNumbers);
+        buttonList.Sort();
     }
 
-    void Update()
-    {
-        
-    }
 }
