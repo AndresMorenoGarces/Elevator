@@ -2,43 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Elevator : MonoBehaviour
+public class Elevator 
 {
-    public static Elevator elevatorInstance;
     Transform elevatorTransform;
     public Transform[] elevatorWayPoints;
-    public int currentFloor;
-    public float elevatorSpeed;
-    Vector3 distanceElevator_NextFloor;
     public Transform doorOne;
-    
 
-    public void ElevatorMove()
+    Vector3 distanceElevator_NextFloor;
+
+    [HideInInspector]
+    public int destinyFloor = 0;
+
+    public bool ElevatorMove()
     {
-         distanceElevator_NextFloor = elevatorWayPoints[currentFloor].position - elevatorTransform.position;
+         distanceElevator_NextFloor = elevatorWayPoints[destinyFloor].position - elevatorTransform.position;
 
         if (distanceElevator_NextFloor.magnitude > 0.1f)
         {
-            elevatorTransform.position += distanceElevator_NextFloor * 1f * Time.deltaTime;
-            CloseDoor();
+            elevatorTransform.position += distanceElevator_NextFloor * 2f * Time.deltaTime;
+            return true;
         }
-        else if (distanceElevator_NextFloor.magnitude <= 0.1f)
+        else
         {
-            OpenDoor();
-        }
-
-        switch (GameManager.instance.floorNumbers[0])
-        {
-            case 0:
-                break;
-            case 1:
-                break;
-            case 2:
-                break;
-            case 3:
-                break;
-            case 4:
-                break;
+            return false;
         }
     }
 
@@ -60,19 +46,10 @@ public class Elevator : MonoBehaviour
 
     private void Awake()
     {
-        elevatorTransform = transform;
-        currentFloor = GameManager.instance.buttonList.IndexOf(0);
-
-        if (elevatorInstance == null)
-        {
-            elevatorInstance = this;
-        }
-        else
-        {
-            Destroy(this.gameObject);
-        }
+        elevatorTransform = GameObject.Find("Elevator").transform;
     }
 }
+
 enum ElevatorMove
 {
     Move,
