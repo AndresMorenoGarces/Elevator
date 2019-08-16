@@ -5,17 +5,14 @@ using UnityEngine;
 public class Elevator 
 {
     Transform elevatorTransform;
-    public Transform[] elevatorWayPoints;
-    public Transform doorOne;
+    Transform[] _elevatorWayPoints;
+    Transform _doorOne;
 
     Vector3 distanceElevator_NextFloor;
 
-    [HideInInspector]
-    public int destinyFloor = 0;
-
-    public bool ElevatorMove()
+    public bool ElevatorMove(int destinyFloor)
     {
-         distanceElevator_NextFloor = elevatorWayPoints[destinyFloor].position - elevatorTransform.position;
+        distanceElevator_NextFloor = GameManager.instance.elevatorWayPoints[destinyFloor].position - elevatorTransform.position;
 
         if (distanceElevator_NextFloor.magnitude > 0.1f)
         {
@@ -30,28 +27,25 @@ public class Elevator
 
     public void CloseDoor()
     {
-        if (doorOne.position.z < -1)
+        if (_doorOne.position.z < -1)
         {
-            doorOne.position += doorOne.transform.forward * Time.deltaTime;
+            _doorOne.position += _doorOne.transform.forward * Time.deltaTime;
         }
     }
 
     public void OpenDoor()
     {
-        if (doorOne.position.z >= -1)
+        if (_doorOne.position.z >= -1)
         {
-            doorOne.position -= doorOne.transform.forward * 0.5f * Time.deltaTime;
+            _doorOne.position -= _doorOne.transform.forward * 0.5f * Time.deltaTime;
         }
     }
 
     private void Awake()
     {
         elevatorTransform = GameObject.Find("Elevator").transform;
+        _elevatorWayPoints = GameManager.instance.elevatorWayPoints;
+        _doorOne = GameManager.instance.doorOne;
     }
 }
 
-enum ElevatorMove
-{
-    Move,
-    Stop
-};
