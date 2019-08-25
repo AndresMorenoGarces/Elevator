@@ -5,12 +5,14 @@ using UnityEngine;
 public class ButtonPress : MonoBehaviour
 {
     public int floor;
-    void OnMouseEnter()
+
+    void OnMouseOver()
     {
-        if (Input.GetKey(KeyCode.Mouse0))
-        {
-            GameManager.instance.Open_CloseElevatorPerMove(floor);
-        }
-        
+        GameManager.instance.Open_CloseElevatorPerMove();
+    }
+
+    private void Start()
+    {
+        GameManager.instance.destinyFloor = floor;
     }
 }

@@ -1,20 +1,20 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public Transform[] elevatorWayPoints;
+    public Transform elevator;
     public Transform doorOne;
-
+    public int destinyFloor = 0;
 
     Elevator elevatorTemp = new Elevator();
     
-    public void Open_CloseElevatorPerMove(int _destinyFloor)
+    public void Open_CloseElevatorPerMove()
     {
-        if (elevatorTemp.ElevatorMove(_destinyFloor) == true)       
+        if (elevatorTemp.ElevatorMove(destinyFloor) == true)       
             elevatorTemp.CloseDoor();     
         else
             elevatorTemp.OpenDoor();

@@ -10,9 +10,12 @@ public class Elevator
 
     Vector3 distanceElevator_NextFloor;
 
-    public bool ElevatorMove(int destinyFloor)
+    public bool ElevatorMove(int _destinyFloor)
     {
-        distanceElevator_NextFloor = GameManager.instance.elevatorWayPoints[destinyFloor].position - elevatorTransform.position;
+        elevatorTransform = GameManager.instance.elevator;
+        _elevatorWayPoints = GameManager.instance.elevatorWayPoints;
+
+        distanceElevator_NextFloor = _elevatorWayPoints[_destinyFloor].position - elevatorTransform.position;
 
         if (distanceElevator_NextFloor.magnitude > 0.1f)
         {
@@ -27,6 +30,8 @@ public class Elevator
 
     public void CloseDoor()
     {
+        _doorOne = GameManager.instance.doorOne;
+
         if (_doorOne.position.z < -1)
         {
             _doorOne.position += _doorOne.transform.forward * Time.deltaTime;
@@ -35,17 +40,12 @@ public class Elevator
 
     public void OpenDoor()
     {
+        _doorOne = GameManager.instance.doorOne;
+
         if (_doorOne.position.z >= -1)
         {
             _doorOne.position -= _doorOne.transform.forward * 0.5f * Time.deltaTime;
         }
-    }
-
-    private void Awake()
-    {
-        elevatorTransform = GameObject.Find("Elevator").transform;
-        _elevatorWayPoints = GameManager.instance.elevatorWayPoints;
-        _doorOne = GameManager.instance.doorOne;
     }
 }
 
