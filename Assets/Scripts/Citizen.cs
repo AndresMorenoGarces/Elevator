@@ -32,7 +32,7 @@ public class Citizen : MonoBehaviour
     {
         mouseX += Input.GetAxis("Mouse X");
 
-        player.eulerAngles = new Vector3(0, mouseX * 2);
+        player.eulerAngles = new Vector3(0, -90 + mouseX);
     }
     void Awake()
     {

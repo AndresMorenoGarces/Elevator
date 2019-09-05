@@ -2,50 +2,58 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Elevator 
+public class Elevator : MonoBehaviour
 {
+    public static Elevator instance;
+
     Transform elevatorTransform;
-    Transform[] _elevatorWayPoints;
-    Transform _doorOne;
+    public Transform[] elevatorWayPoints;
 
-    Vector3 distanceElevator_NextFloor;
+    public Transform elevatorDoor;
+    Vector3 closeDoor;
+    Vector3 openDoor;
+    Vector3 dualElevatorDoorPos;
 
-    public bool ElevatorMove(int _destinyFloor)
+    public float elevatorVelocity = 1f;
+
+    public void ElevatorMove(int _destinyFloor, bool _buttonPress)
     {
-        elevatorTransform = GameManager.instance.elevator;
-        _elevatorWayPoints = GameManager.instance.elevatorWayPoints;
+        List<int> _floorList = GameManager.instance.floorList;
+        elevatorTransform.position = Vector3.MoveTowards(elevatorTransform.position, elevatorWayPoints[_floorList[_destinyFloor]].position, elevatorVelocity * Time.deltaTime);
 
-        distanceElevator_NextFloor = _elevatorWayPoints[_destinyFloor].position - elevatorTransform.position;
-
-        if (distanceElevator_NextFloor.magnitude > 0.1f)
+        if (elevatorTransform.position == elevatorWayPoints[_floorList[_destinyFloor]].position)
         {
-            elevatorTransform.position += distanceElevator_NextFloor * 2f * Time.deltaTime;
-            return true;
+            _buttonPress = false;
+            DoorState(false);
+        }
+        else
+            DoorState(true);
+
+    }
+
+    public void DoorState(bool elevatorDoorClose)
+    {
+        dualElevatorDoorPos = elevatorDoorClose ? closeDoor : openDoor;
+        elevatorDoor.position = Vector3.MoveTowards(elevatorDoor.position, dualElevatorDoorPos, 2 * Time.deltaTime);
+    }
+
+    private void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
         }
         else
         {
-            return false;
+            Destroy(this.gameObject);
         }
+
+        elevatorTransform = transform;
     }
 
-    public void CloseDoor()
+    private void Start()
     {
-        _doorOne = GameManager.instance.doorOne;
-
-        if (_doorOne.position.z < -1)
-        {
-            _doorOne.position += _doorOne.transform.forward * Time.deltaTime;
-        }
-    }
-
-    public void OpenDoor()
-    {
-        _doorOne = GameManager.instance.doorOne;
-
-        if (_doorOne.position.z >= -1)
-        {
-            _doorOne.position -= _doorOne.transform.forward * 0.5f * Time.deltaTime;
-        }
+        closeDoor = new Vector3(-4f, 2.5f, 1.25f);
+        openDoor = new Vector3(-4f, 2.5f, -1f);
     }
 }
-

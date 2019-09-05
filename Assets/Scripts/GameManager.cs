@@ -1,25 +1,22 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    public Transform[] elevatorWayPoints;
-    public Transform elevator;
-    public Transform doorOne;
-    public int destinyFloor = 0;
 
-    Elevator elevatorTemp = new Elevator();
-    
-    public void Open_CloseElevatorPerMove()
+    public List<int> floorList = new List<int>();
+
+    internal void AddfloorToList(int floor)
     {
-        if (elevatorTemp.ElevatorMove(destinyFloor) == true)       
-            elevatorTemp.CloseDoor();     
-        else
-            elevatorTemp.OpenDoor();
+        if (!floorList.Contains(floor))
+        {
+            floorList.Add(floor);           
+        }
     }
-
+  
     void Awake()
     {
         if(instance == null)
