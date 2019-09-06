@@ -8,33 +8,50 @@ public class Elevator : MonoBehaviour
 
     Transform elevatorTransform;
     public Transform[] elevatorWayPoints;
+    public Transform[] doorTransforms;
 
-    public Transform elevatorDoor;
     Vector3 closeDoor;
     Vector3 openDoor;
     Vector3 dualElevatorDoorPos;
+    Vector3 positionToGo;
+
+    int floorInt;
 
     public float elevatorVelocity = 1f;
 
-    public void ElevatorMove(int _destinyFloor, bool _buttonPress)
+    bool eDoorState = false;
+
+
+    public void SetOnlyOneFloorToGo(int posFloor)
     {
-        List<int> _floorList = GameManager.instance.floorList;
-        elevatorTransform.position = Vector3.MoveTowards(elevatorTransform.position, elevatorWayPoints[_floorList[_destinyFloor]].position, elevatorVelocity * Time.deltaTime);
+        positionToGo = elevatorWayPoints[posFloor].position;
 
-        if (elevatorTransform.position == elevatorWayPoints[_floorList[_destinyFloor]].position)
-        {
-            _buttonPress = false;
-            DoorState(false);
-        }
-        else
-            DoorState(true);
-
+       
     }
 
-    public void DoorState(bool elevatorDoorClose)
+    void Update()
     {
-        dualElevatorDoorPos = elevatorDoorClose ? closeDoor : openDoor;
-        elevatorDoor.position = Vector3.MoveTowards(elevatorDoor.position, dualElevatorDoorPos, 2 * Time.deltaTime);
+        closeDoor = new Vector3(-4f, doorTransforms[floorInt].position.y, 1.25f);
+        openDoor = new Vector3(-4f, doorTransforms[floorInt].position.y, -1f);
+        dualElevatorDoorPos = eDoorState ? closeDoor : openDoor;
+
+        if (elevatorTransform.position == positionToGo)
+        {
+            Elevator.instance.DoorStateClose(floorInt);
+            eDoorState = false;
+        }
+        else
+            eDoorState = true;
+
+        elevatorTransform.position = Vector3.MoveTowards(elevatorTransform.position, positionToGo, elevatorVelocity * Time.deltaTime);
+        doorTransforms[floorInt].position = Vector3.MoveTowards(doorTransforms[floorInt].position, dualElevatorDoorPos, 2 * Time.deltaTime);
+
+    }    
+
+    public void DoorStateClose(int posFloor)
+    {
+        
+        floorInt = posFloor;
     }
 
     private void Awake()
@@ -53,7 +70,7 @@ public class Elevator : MonoBehaviour
 
     private void Start()
     {
-        closeDoor = new Vector3(-4f, 2.5f, 1.25f);
-        openDoor = new Vector3(-4f, 2.5f, -1f);
+        positionToGo = this.transform.position;
+
     }
 }

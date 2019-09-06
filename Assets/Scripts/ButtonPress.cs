@@ -30,18 +30,6 @@ public class ButtonPress : MonoBehaviour
         {
             buttonPress = true;
         }
-
-        if (eTimeToGo <= 0)
-        {
-            Elevator.instance.DoorState(true);
-            Elevator.instance.ElevatorMove(GameManager.instance.floorList[floor], buttonPress);
-
-        }
-        //else if (eTimeToGo > 0 && buttonPress == false)
-        //{
-        //    eTimeToGo -= Time.deltaTime;
-        //}
-
         onMouseOverButton = false;
     }
 }
