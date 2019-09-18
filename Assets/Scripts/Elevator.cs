@@ -6,52 +6,91 @@ public class Elevator : MonoBehaviour
 {
     public static Elevator instance;
 
-    Transform elevatorTransform;
+    [HideInInspector]
+    public Transform elevatorTransform;
     public Transform[] elevatorWayPoints;
-    public Transform[] doorTransforms;
+    public Transform[] elevatorLeftDoors;
+    public Transform[] elevatorRightDoors;
 
-    Vector3 closeDoor;
-    Vector3 openDoor;
-    Vector3 dualElevatorDoorPos;
     Vector3 positionToGo;
+    Vector3 leftDoorPos;
+    Vector3 rightDoorPos;
 
-    int floorInt;
-
+    int floorNum = 0;
     public float elevatorVelocity = 1f;
 
-    bool eDoorState = false;
+    bool isfloorSelected = false;
+
+    [HideInInspector]
+    public bool isDoorOpen= false;
 
 
-    public void SetOnlyOneFloorToGo(int posFloor)
+    public void FloorDoorIndex(int posFloor)
     {
-        positionToGo = elevatorWayPoints[posFloor].position;
-
-       
+        floorNum = posFloor;
+        isfloorSelected = true;
     }
 
-    void Update()
+    public void ElevatorDoorState(bool isOpen)
     {
-        closeDoor = new Vector3(-4f, doorTransforms[floorInt].position.y, 1.25f);
-        openDoor = new Vector3(-4f, doorTransforms[floorInt].position.y, -1f);
-        dualElevatorDoorPos = eDoorState ? closeDoor : openDoor;
-
-        if (elevatorTransform.position == positionToGo)
+        if (isOpen == true)
         {
-            Elevator.instance.DoorStateClose(floorInt);
-            eDoorState = false;
+            leftDoorPos = new Vector3(-4.1f, elevatorLeftDoors[floorNum].position.y, -3.25f);
+            rightDoorPos = new Vector3(-4.1f, elevatorRightDoors[floorNum].position.y, 3.25f);
+
+            if (elevatorRightDoors[floorNum].position == rightDoorPos)
+            {
+                isDoorOpen = true;
+            }
+            StartCoroutine(TimeToCloseDoor());
+
         }
         else
-            eDoorState = true;
+        {
+            StopCoroutine(TimeToCloseDoor());
+            leftDoorPos = new Vector3(-4.1f, elevatorLeftDoors[floorNum].position.y, -1.25f);
+            rightDoorPos = new Vector3(-4.1f, elevatorRightDoors[floorNum].position.y, 1.25f);
 
-        elevatorTransform.position = Vector3.MoveTowards(elevatorTransform.position, positionToGo, elevatorVelocity * Time.deltaTime);
-        doorTransforms[floorInt].position = Vector3.MoveTowards(doorTransforms[floorInt].position, dualElevatorDoorPos, 2 * Time.deltaTime);
+            if (elevatorRightDoors[floorNum].position == rightDoorPos)            
+            {
+                isDoorOpen = false;
+            }
+        }
+    }
 
-    }    
-
-    public void DoorStateClose(int posFloor)
+    public IEnumerator TimeToCloseDoor()
     {
-        
-        floorInt = posFloor;
+        yield return new WaitForSeconds(5);
+        ElevatorDoorState(false);
+    }
+    
+    public void SetOnlyOneFloorToGo()
+    {
+        positionToGo = elevatorWayPoints[floorNum].position;
+    }
+
+    void DoorMoveState()
+    {
+        if (Vector3.Distance(elevatorTransform.position, positionToGo) == 0 && isfloorSelected)
+        {
+            isfloorSelected = false;
+            ElevatorDoorState(true);
+        }
+        else if (Vector3.Distance(elevatorTransform.position, positionToGo) != 0 && isfloorSelected)
+        {
+            ElevatorDoorState(false);
+        }
+
+        elevatorLeftDoors[floorNum].position = Vector3.MoveTowards(elevatorLeftDoors[floorNum].position, leftDoorPos, Time.deltaTime);
+        elevatorRightDoors[floorNum].position = Vector3.MoveTowards(elevatorRightDoors[floorNum].position, rightDoorPos, Time.deltaTime);
+    }
+
+    void ElevatorMove()
+    {
+        if (isDoorOpen == false)
+        {
+            elevatorTransform.position = Vector3.MoveTowards(elevatorTransform.position, positionToGo, elevatorVelocity * Time.deltaTime);
+        }
     }
 
     private void Awake()
@@ -70,7 +109,13 @@ public class Elevator : MonoBehaviour
 
     private void Start()
     {
-        positionToGo = this.transform.position;
+        positionToGo = elevatorTransform.position;
+        ElevatorDoorState(false);
+    }
 
+    void Update()
+    {
+        ElevatorMove();
+        DoorMoveState();
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Citizen : MonoBehaviour
 {
-    Transform player;   
+    public Transform player;   
     public float speed;
     float mouseX;
 

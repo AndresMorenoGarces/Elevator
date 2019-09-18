@@ -10,8 +10,8 @@ public class LobyButton : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Mouse0))
         {
-            Elevator.instance.DoorStateClose(floor);
-            Elevator.instance.SetOnlyOneFloorToGo(floor);
+            Elevator.instance.FloorDoorIndex(floor);
+            Elevator.instance.SetOnlyOneFloorToGo();
         }     
     }
 }

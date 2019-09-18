@@ -4,32 +4,19 @@ using UnityEngine;
 
 public class ButtonPress : MonoBehaviour
 {
-    public int floor;
-    float eTimeToGo = 3f;
-    bool buttonPress = false;
-    bool onMouseOverButton = false;
+    public int floor = 0;
 
     void OnMouseOver()
     {
-        onMouseOverButton = true;
-
-        if (buttonPress == true)
+        if (Input.GetKeyDown(KeyCode.Mouse0) && Elevator.instance.isDoorOpen == false)
         {
-            GameManager.instance.AddfloorToList(floor);
-
-            if (Input.GetKey(KeyCode.Mouse0))
-            {
-                eTimeToGo = 3f;
-            }
+            Elevator.instance.FloorDoorIndex(floor);
+            Elevator.instance.SetOnlyOneFloorToGo();
         }
-    }
-
-    private void Update()
-    {
-        if (Input.GetKey(KeyCode.Mouse0) && onMouseOverButton)
-        {
-            buttonPress = true;
-        }
-        onMouseOverButton = false;
     }
 }
+//List<int> _elevatorFloorList = GameManager.instance.elevatorFloorList;
+//GameManager.instance.AddElevatorfloorToList(floor);
+//if (Elevator.instance.eDoorState == true)
+//{
+//}

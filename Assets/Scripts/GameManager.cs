@@ -7,15 +7,15 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-    public List<int> floorList = new List<int>();
+    //public List<int> elevatorFloorList = new List<int>();
 
-    internal void AddfloorToList(int floor)
-    {
-        if (!floorList.Contains(floor))
-        {
-            floorList.Add(floor);           
-        }
-    }
+    //internal void AddElevatorfloorToList(int floor)
+    //{
+    //    if (!elevatorFloorList.Contains(floor))
+    //    {
+    //        elevatorFloorList.Add(floor);           
+    //    }
+    //}
   
     void Awake()
     {
